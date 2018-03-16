@@ -1,3 +1,6 @@
+#ifndef NEIGH_DIST_MATRIX
+#define NEIGH_DIST_MATRIX
+
 #include <stdint.h>
 
 struct dist_matrix {
@@ -13,5 +16,7 @@ struct dist_matrix {
 
 typedef struct dist_matrix dist_matrix;
 
-dist_matrix *dist_matrix_init(...);
+dist_matrix *dist_matrix_init();
 void dist_matrix_free(dist_matrix *dmat);
+
+#endif // NEIGH_DIST_MATRIX

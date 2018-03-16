@@ -3,4 +3,4 @@ project(neigh)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(neigh src/main.c)
+add_executable(neigh src/main.c src/dist_matrix.c)
