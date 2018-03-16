@@ -26,12 +26,17 @@ dist_matrix *dist_matrix_init(uint32_t species_count) {
 }
 
 void dist_matrix_free(dist_matrix *dmat) {
-    for (uint32_t i = 0; i < dmat->species_count; i++) {
-        free(dmat->species_names[i]);
-    }
+    if (dmat) {
+        if (dmat->species_names) {
+            for (uint32_t i = 0; i < dmat->species_count; i++) {
+                free(dmat->species_names[i]);
+            }
 
-    free(dmat->species_names);
-    free(dmat);
+            free(dmat->species_names);
+        }
+
+        free(dmat);
+    }
 }
 
 double *dist_matrix_element(dist_matrix *dmat, uint32_t c1, uint32_t c2) {

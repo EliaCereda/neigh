@@ -4,19 +4,6 @@
 #include <inttypes.h>
 #include <ctype.h>
 
-#define CHECK_SCANF_RESULT(result, value, message, file, dmat) \
-    if (result != value) {                                     \
-        perror(message);                                       \
-                                                               \
-        if (dmat) {                                            \
-            dist_matrix_free(dmat);                            \
-        }                                                      \
-                                                               \
-        fclose(file);                                          \
-                                                               \
-        return NULL;                                           \
-    }
-
 static size_t trim_trailing_space(char *s) {
     size_t length = strlen(s);
 
@@ -28,6 +15,16 @@ static size_t trim_trailing_space(char *s) {
 
     return length;
 }
+
+#define CHECK_SCANF_RESULT(result, value, message, file, dmat) \
+    if (result != value) {                                     \
+        perror(message);                                       \
+                                                               \
+        dist_matrix_free(dmat);                                \
+        fclose(file);                                          \
+                                                               \
+        return NULL;                                           \
+    }
 
 dist_matrix *load_file(const char *file_name) {
     FILE *f = fopen(file_name, "r");
