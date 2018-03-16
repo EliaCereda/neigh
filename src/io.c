@@ -4,6 +4,14 @@
 #include <inttypes.h>
 #include <ctype.h>
 
+#define CHECK_SCANF_RESULT(result, value, message, file) \
+    if (result != value) {                               \
+        perror(message);                                 \
+                                                         \
+        fclose(file);                                    \
+        return NULL;                                     \
+    }
+
 size_t trim_trailing_space(char *s) {
     size_t length = strlen(s);
 
@@ -29,12 +37,7 @@ dist_matrix *load_file(const char *file_name) {
 
     result = fscanf(f, "%" SCNu32, &species_count);
 
-    if (result != 1) {
-        perror("Invalid species count");
-
-        fclose(f);
-        return NULL;
-    }
+    CHECK_SCANF_RESULT(result, 1, "Invalid species count", f);
 
     for (uint32_t i = 0; i < species_count; i++) {
         /* species name: up to 30 alphabetic or whitespace characters */
@@ -42,12 +45,7 @@ dist_matrix *load_file(const char *file_name) {
 
         result = fscanf(f, " %30[^0-9\n]", species_name);
 
-        if (result != 1) {
-            perror("Invalid species name");
-
-            fclose(f);
-            return NULL;
-        }
+        CHECK_SCANF_RESULT(result, 1, "Invalid species name", f);
 
         trim_trailing_space(species_name);
     }
