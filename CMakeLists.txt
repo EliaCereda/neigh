@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.9)
 project(neigh)
 
 set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_EXTENSIONS OFF)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wpedantic")
 
 set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
 

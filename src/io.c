@@ -17,7 +17,7 @@
         return NULL;                                           \
     }
 
-size_t trim_trailing_space(char *s) {
+static size_t trim_trailing_space(char *s) {
     size_t length = strlen(s);
 
     while (length > 0 && isspace(s[length - 1])) {
@@ -71,8 +71,8 @@ dist_matrix *load_file(const char *file_name) {
             CHECK_SCANF_RESULT(result, 1, "Invalid distance", f, dmat);
         }
 
+        /* Ignore a dash at the end of the line */
         fscanf(f, " %1[-]", species_name);
-
     }
 
     fclose(f);

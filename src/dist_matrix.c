@@ -53,10 +53,10 @@ uint32_t dist_matrix_size(uint32_t species_count) {
 
 void dist_matrix_print(const dist_matrix *dmat) {
 
-    size_t max_length = 6;
+    int max_length = 6;
 
     for (uint32_t i = 0; i < dmat->species_count; i++) {
-        size_t length = strlen(dmat->species_names[i]);
+        int length = (int)strlen(dmat->species_names[i]);
 
         if (length > max_length) {
             max_length = length;
