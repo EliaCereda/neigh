@@ -4,12 +4,17 @@
 #include <inttypes.h>
 #include <ctype.h>
 
-#define CHECK_SCANF_RESULT(result, value, message, file) \
-    if (result != value) {                               \
-        perror(message);                                 \
-                                                         \
-        fclose(file);                                    \
-        return NULL;                                     \
+#define CHECK_SCANF_RESULT(result, value, message, file, dmat) \
+    if (result != value) {                                     \
+        perror(message);                                       \
+                                                               \
+        if (dmat) {                                            \
+            dist_matrix_free(dmat);                            \
+        }                                                      \
+                                                               \
+        fclose(file);                                          \
+                                                               \
+        return NULL;                                           \
     }
 
 size_t trim_trailing_space(char *s) {
@@ -37,22 +42,40 @@ dist_matrix *load_file(const char *file_name) {
 
     result = fscanf(f, "%" SCNu32, &species_count);
 
-    CHECK_SCANF_RESULT(result, 1, "Invalid species count", f);
+    CHECK_SCANF_RESULT(result, 1, "Invalid species count", f, NULL);
+
+    dist_matrix *dmat = dist_matrix_init(species_count);
+
+    if (!dmat) {
+        perror("Unable to create distance matrix");
+        return NULL;
+    }
 
     for (uint32_t i = 0; i < species_count; i++) {
         /* species name: up to 30 alphabetic or whitespace characters */
         char species_name[31];
 
-        result = fscanf(f, " %30[^0-9\n]", species_name);
+        result = fscanf(f, " %30[^0-9-\n]", species_name);
 
-        CHECK_SCANF_RESULT(result, 1, "Invalid species name", f);
+        CHECK_SCANF_RESULT(result, 1, "Invalid species name", f, dmat);
 
         trim_trailing_space(species_name);
+
+        dmat->species_names[i] = strdup(species_name);
+
+        for (uint32_t j = 0; j < i; j++) {
+            double *element = dist_matrix_element(dmat, i, j);
+
+            result = fscanf(f, "%lf", element);
+
+            CHECK_SCANF_RESULT(result, 1, "Invalid distance", f, dmat);
+        }
+
+        fscanf(f, " %1[-]", species_name);
+
     }
 
     fclose(f);
-
-    dist_matrix *dmat = NULL;
 
     return dmat;
 }
