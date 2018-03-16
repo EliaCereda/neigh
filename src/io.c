@@ -1,6 +1,7 @@
 #include "io.h"
 #include <stdio.h>
 #include <memory.h>
+#include <inttypes.h>
 #include <ctype.h>
 
 size_t trim_trailing_space(char *s) {
@@ -23,6 +24,37 @@ dist_matrix *load_file(const char *file_name) {
         return NULL;
     }
 
+    int result;
+    uint32_t species_count;
 
-    //dist_matrix * = ;
+    result = fscanf(f, "%" SCNu32, &species_count);
+
+    if (result != 1) {
+        perror("Invalid species count");
+
+        fclose(f);
+        return NULL;
+    }
+
+    for (uint32_t i = 0; i < species_count; i++) {
+        /* species name: up to 30 alphabetic or whitespace characters */
+        char species_name[31];
+
+        result = fscanf(f, " %30[^0-9\n]", species_name);
+
+        if (result != 1) {
+            perror("Invalid species name");
+
+            fclose(f);
+            return NULL;
+        }
+
+        trim_trailing_space(species_name);
+    }
+
+    fclose(f);
+
+    dist_matrix *dmat = NULL;
+
+    return dmat;
 }

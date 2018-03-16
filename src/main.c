@@ -1,3 +1,7 @@
+#include "io.h"
+
 int main(int argc, char *argv[]) {
-  return 0;
+    load_file("examples/evolution.in");
+
+    return 0;
 }
