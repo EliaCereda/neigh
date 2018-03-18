@@ -1,4 +1,6 @@
 #include "dist_matrix.h"
+
+#include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -39,17 +41,24 @@ void dist_matrix_free(dist_matrix *dmat) {
     }
 }
 
-double *dist_matrix_element(dist_matrix *dmat, uint32_t s1, uint32_t s2) {
+static uint32_t dist_matrix_get_offset(const dist_matrix *dmat, uint32_t s1, uint32_t s2) {
     assert(s1 != s2);
     assert(s1 >= 0 && s1 < dmat->species_count);
     assert(s2 >= 0 && s2 < dmat->species_count);
 
     if (s1 < s2) {
-        return dist_matrix_element(dmat, s2, s1);
+        return dist_matrix_get_offset(dmat, s2, s1);
     } else {
-        uint32_t idx = (s1 * (s1 - 1) / 2) + s2;
-        return dmat->distances + idx;
+        return (s1 * (s1 - 1) / 2) + s2;
     }
+}
+
+double *dist_matrix_element(dist_matrix *dmat, uint32_t s1, uint32_t s2) {
+    return dmat->distances + dist_matrix_get_offset(dmat, s1, s2);
+}
+
+double dist_matrix_distance(const dist_matrix *dmat, uint32_t s1, uint32_t s2) {
+    return *(dmat->distances + dist_matrix_get_offset(dmat, s1, s2));
 }
 
 uint32_t dist_matrix_size(uint32_t species_count) {
@@ -80,7 +89,7 @@ void dist_matrix_print(const dist_matrix *dmat) {
         printf("%*s\t", max_length, dmat->species_names[i]);
 
         for (uint32_t j = 0; j < i; j++) {
-            printf("%*.4lf\t", max_length, *dist_matrix_element(dmat, i, j));
+            printf("%*.4lf\t", max_length, dist_matrix_distance(dmat, i, j));
         }
 
         printf("%*s\n", max_length, "-");
