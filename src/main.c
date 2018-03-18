@@ -1,4 +1,5 @@
 #include "io.h"
+#include "neighbour_joining.h"
 
 #include <stdio.h>
 
@@ -9,13 +10,21 @@ int main(int argc, char *argv[]) {
             "examples/wiki.in"
     };
 
-    for (int i = 0; i < 3; i++) {
+    int n = sizeof(files) / sizeof(*files);
+
+    for (int i = 0; i < n; i++) {
         dist_matrix *input = load_file(files[i]);
 
-        if (input) {
-            dist_matrix_print(input);
+        if (!input) {
+            continue;
         }
 
+        dist_matrix_print(input);
+        printf("\n");
+
+        dist_matrix *joined = nj_join_nearest_clusters(input);
+
+        dist_matrix_print(joined);
         printf("\n");
     }
 
