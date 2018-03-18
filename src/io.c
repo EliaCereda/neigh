@@ -52,7 +52,7 @@ dist_matrix *load_file(const char *file_name) {
         /* species name: up to 30 alphabetic or whitespace characters */
         char species_name[31];
 
-        result = fscanf(f, " %30[^0-9-\n]", species_name);
+        result = fscanf(f, " %30[^0-9*\n]", species_name);
 
         CHECK_SCANF_RESULT(result, 1, "Invalid species name", f, dmat);
 
@@ -68,8 +68,8 @@ dist_matrix *load_file(const char *file_name) {
             CHECK_SCANF_RESULT(result, 1, "Invalid distance", f, dmat);
         }
 
-        /* Ignore a dash at the end of the line */
-        fscanf(f, " %1[-]", species_name);
+        /* Ignore asterisks at the end of the line */
+        fscanf(f, " *");
     }
 
     fclose(f);

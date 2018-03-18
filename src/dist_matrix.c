@@ -92,7 +92,7 @@ void dist_matrix_print(const dist_matrix *dmat) {
             printf("%*.4lf\t", max_length, dist_matrix_distance(dmat, i, j));
         }
 
-        printf("%*s\n", max_length, "-");
+        printf("%*s\n", max_length, "*");
     }
 
 
