@@ -23,6 +23,9 @@ void dist_matrix_free(dist_matrix *dmat);
 double *dist_matrix_element(dist_matrix *dmat, uint32_t s1, uint32_t s2);
 double  dist_matrix_distance(const dist_matrix *dmat, uint32_t s1, uint32_t s2);
 
+/* Calculate the distance between a species s and all the others */
+double dist_matrix_distance_from_others(const dist_matrix *dmat, uint32_t s);
+
 /* Get the matrix size for a given number of species */
 uint32_t dist_matrix_size(uint32_t species_count);
 

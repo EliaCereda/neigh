@@ -61,6 +61,22 @@ double dist_matrix_distance(const dist_matrix *dmat, uint32_t s1, uint32_t s2) {
     return *(dmat->distances + dist_matrix_get_offset(dmat, s1, s2));
 }
 
+double dist_matrix_distance_from_others(const dist_matrix *dmat, uint32_t s) {
+    assert(dmat->species_count > 2);
+    
+    double distance = 0;
+    
+    for (uint32_t i = 0; i < dmat->species_count; i++) {
+        if (i == s) {
+            continue;
+        }
+        
+        distance += dist_matrix_distance(dmat, s, i);
+    }
+    
+    return distance / (dmat->species_count - 2);
+}
+
 uint32_t dist_matrix_size(uint32_t species_count) {
     return species_count * (species_count - 1) / 2;
 }
