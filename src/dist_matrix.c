@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <inttypes.h>
 
 dist_matrix *dist_matrix_init(uint32_t species_count) {
     dist_matrix *dmat;
@@ -100,7 +101,8 @@ uint32_t dist_matrix_size(uint32_t species_count) {
 }
 
 void dist_matrix_print(const dist_matrix *dmat) {
-
+    
+    /* Max value among species_name, the string "c_size" and the distances */
     int max_length = 6;
 
     for (uint32_t i = 0; i < dmat->species_count; i++) {
@@ -129,5 +131,14 @@ void dist_matrix_print(const dist_matrix *dmat) {
         printf("%*s\n", max_length, "*");
     }
 
+    printf("\n");
+    printf("%*s\t", max_length, "c_size");
+    
+    
+    for (uint32_t i = 0; i < dmat->species_count; i++) {
+        printf("%*" PRId32 "\t", max_length, dmat->cluster_sizes[i]);
+    }
+    
+    printf("\n");
 
 }
