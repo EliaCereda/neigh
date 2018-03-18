@@ -6,10 +6,13 @@
 struct dist_matrix {
     /* Number of species */
     uint32_t species_count;
-  
+    
     /* Names of the species */
     char **species_names;
-
+    
+    /* Number of species in each cluster */
+    uint32_t *cluster_sizes;
+    
     /* Distance matrix */
     double distances[];
 };

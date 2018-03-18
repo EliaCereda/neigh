@@ -22,6 +22,14 @@ dist_matrix *dist_matrix_init(uint32_t species_count) {
 
             return NULL;
         }
+        
+        dmat->cluster_sizes = malloc(species_count * sizeof(dmat->cluster_sizes[0]));
+        
+        if (dmat->cluster_sizes == NULL) {
+            dist_matrix_free(dmat);
+            
+            return NULL;
+        }
     }
 
     return dmat;
@@ -35,6 +43,10 @@ void dist_matrix_free(dist_matrix *dmat) {
             }
 
             free(dmat->species_names);
+        }
+        
+        if (dmat->cluster_sizes) {
+            free(dmat->cluster_sizes);
         }
 
         free(dmat);
