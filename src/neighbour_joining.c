@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
-dist_matrix *nj_join_nearest_clusters(const dist_matrix *dmat) {
+dist_matrix *nj_join_nearest_clusters(const dist_matrix *dmat, const char *new_name) {
     assert(dmat->species_count >= 2);
 
     uint32_t c1 = 1;
@@ -53,7 +53,7 @@ dist_matrix *nj_join_nearest_clusters(const dist_matrix *dmat) {
 
         if (i == c1) {
             /* Replace c1 with the union of clusters c1 and c2 */
-            species_name = "C_overbar";
+            species_name = new_name;
             cluster_size = dmat->cluster_sizes[c1] + dmat->cluster_sizes[c2];
         } else if (i == c2) {
             /* Remove cluster c2 */

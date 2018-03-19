@@ -2,6 +2,9 @@
 #include "neighbour_joining.h"
 
 #include <stdio.h>
+#include <inttypes.h>
+#include <math.h>
+#include <assert.h>
 
 int main(int argc, char *argv[]) {
     char *files[] = {
@@ -13,22 +16,35 @@ int main(int argc, char *argv[]) {
     int n = sizeof(files) / sizeof(*files);
 
     for (int i = 0; i < n; i++) {
-        dist_matrix *input = load_file(files[i]);
+        dist_matrix *dmat = load_file(files[i]);
 
-        if (!input) {
+        if (!dmat) {
             continue;
         }
 
-        dist_matrix_print(input);
+        dist_matrix_print(dmat);
         printf("\n");
 
-        dist_matrix *joined = nj_join_nearest_clusters(input);
+        /* Ensure that cluster_name has enough space for the longest possible name */
+        char cluster_name[2 + 3 * sizeof(dmat->species_count)];
+        uint32_t cluster_id = 1;
 
-        dist_matrix_print(joined);
-        printf("\n");
-        
-        dist_matrix_free(input);
-        dist_matrix_free(joined);
+        while (dmat->species_count >= 2) {
+            unsigned long result = snprintf(cluster_name, sizeof(cluster_name), "C_%" PRIu32, cluster_id);
+            assert(result > 0 && result < sizeof(cluster_name));
+            
+            dist_matrix *joined = nj_join_nearest_clusters(dmat, cluster_name);
+
+            dist_matrix_free(dmat);
+            dmat = joined;
+
+            dist_matrix_print(dmat);
+            printf("\n");
+
+            cluster_id++;
+        }
+
+        dist_matrix_free(dmat);
     }
 
     return 0;

@@ -4,6 +4,6 @@
 #include "dist_matrix.h"
 
 /* Create a new dist_matrix, obtained joining the two nearest clusters. */
-dist_matrix *nj_join_nearest_clusters(const dist_matrix *dmat);
+dist_matrix *nj_join_nearest_clusters(const dist_matrix *dmat, const char *new_name);
 
 #endif //NEIGH_NEIGHBOUR_JOINING_H
