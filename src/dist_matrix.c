@@ -136,7 +136,7 @@ void dist_matrix_print(const dist_matrix *dmat) {
     
     
     for (uint32_t i = 0; i < dmat->species_count; i++) {
-        printf("%*" PRId32 "\t", max_length, dmat->cluster_sizes[i]);
+        printf("%*" PRIu32 "\t", max_length, dmat->cluster_sizes[i]);
     }
     
     printf("\n");
