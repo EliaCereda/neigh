@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <stddef.h>
 
+typedef struct dist_matrix dist_matrix;
+
 struct dist_matrix {
     /* Number of species */
     uint32_t species_count;
@@ -17,8 +19,6 @@ struct dist_matrix {
     /* Distance matrix */
     double distances[];
 };
-
-typedef struct dist_matrix dist_matrix;
 
 /* Get the size in bytes of a dist_matrix with the given number of species */
 size_t dist_matrix_size(uint32_t species_count);
