@@ -7,11 +7,11 @@
 typedef struct btree_node btree_node;
 
 struct btree_node {
-    /* Left and right children */
-    btree_node *left, *right;
-    
     /* Name of the node */
     char *node_name;
+
+    /* Left and right children */
+    btree_node *left, *right;
 };
 
 typedef struct btree_storage btree_storage;
@@ -33,5 +33,7 @@ void btree_storage_free(btree_storage *tree);
 
 /* Fetch the first available node */
 btree_node *btree_storage_fetch(btree_storage *storage);
+
+void btree_print(btree_node *root);
 
 #endif /* NEIGH_PHYLOGENETIC_TREE_H */

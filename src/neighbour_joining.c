@@ -115,3 +115,29 @@ dist_matrix *nj_join_nearest_clusters(const dist_matrix *dmat, const char *new_n
     
     return out;
 }
+
+btree_storage *nj_tree_init(const dist_matrix *dmat, btree_node **leafs) {
+    uint32_t node_count = 2 * dmat->species_count - 1;
+    btree_storage *storage = btree_storage_init(node_count);
+    
+    for (uint32_t i = 0; i < dmat->species_count; i++) {
+        leafs[i] = btree_storage_fetch(storage);
+        leafs[i]->node_name = strdup(dmat->species_names[i]);
+    }
+    
+    return storage;
+}
+
+void nj_tree_add_node(const dist_matrix *dmat, btree_storage *storage, btree_node **working_nodes, const char *name, uint32_t c1, uint32_t c2) {
+    btree_node *node = btree_storage_fetch(storage);
+
+    node->node_name = strdup(name);
+    node->left = working_nodes[c1];
+    node->right = working_nodes[c2];
+
+    working_nodes[c1] = node;
+
+    for (uint32_t i = c2 + 1; i < dmat->species_count; i++) {
+        working_nodes[i - 1] = working_nodes[i];
+    }
+}

@@ -18,6 +18,9 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < n; i++) {
         dist_matrix *dmat = load_file(files[i]);
 
+        btree_node *working_nodes[dmat->species_count];
+        btree_storage *tree_storage = nj_tree_init(dmat, working_nodes);
+        
         if (!dmat) {
             continue;
         }
@@ -35,9 +38,15 @@ int main(int argc, char *argv[]) {
             
             uint32_t c1, c2;
             dist_matrix *joined = nj_join_nearest_clusters(dmat, cluster_name, &c1, &c2);
-
-            printf("Joining clusters '%s' and '%s' in '%s'.\n\n", dmat->species_names[c1], dmat->species_names[c2], cluster_name);
             
+            if (joined == NULL) {
+                break;
+            }
+            
+            printf("Joining clusters '%s' and '%s' in '%s'.\n\n", dmat->species_names[c1], dmat->species_names[c2], cluster_name);
+
+            nj_tree_add_node(dmat, tree_storage, working_nodes, cluster_name, c1, c2);
+
             dist_matrix_free(dmat);
             dmat = joined;
 
@@ -47,7 +56,11 @@ int main(int argc, char *argv[]) {
             cluster_id++;
         }
 
+        btree_print(working_nodes[0]);
+        printf("\n");
+
         dist_matrix_free(dmat);
+        btree_storage_free(tree_storage);
     }
 
     return 0;
