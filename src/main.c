@@ -26,6 +26,9 @@ int main(int argc, char *argv[]) {
 
         dist_matrix_print(joined);
         printf("\n");
+        
+        dist_matrix_free(input);
+        dist_matrix_free(joined);
     }
 
     return 0;
