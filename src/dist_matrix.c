@@ -15,9 +15,8 @@ size_t dist_matrix_size(uint32_t species_count) {
 }
 
 dist_matrix *dist_matrix_init(uint32_t species_count) {
-    dist_matrix *dmat;
-
-    dmat = malloc(dist_matrix_size(species_count));
+    size_t size = dist_matrix_size(species_count);
+    dist_matrix *dmat = malloc(size);
 
     if (dmat != NULL) {
         dmat->species_count = species_count;
