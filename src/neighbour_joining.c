@@ -52,24 +52,6 @@ dist_matrix *nj_join_nearest_clusters(const dist_matrix *dmat) {
             /* Replace c1 with the union of clusters c1 and c2 */
             species_name = "C_overbar";
             cluster_size = dmat->cluster_sizes[c1] + dmat->cluster_sizes[c2];
-
-            // TODO: compute distances
-            uint32_t l = 0;
-            
-            for (uint32_t j = 0; j < dmat->species_count; j++) {
-                if (j == c2) {
-                    continue;
-                }
-                if (j != c1) {
-                    double d1 = dist_matrix_distance(dmat, c1, j) / cluster_size;
-                    double d2 = dist_matrix_distance(dmat, c2, j) / cluster_size;
-                    
-                    *(dist_matrix_element(out, k, l)) = d1 + d2;
-                }
-                
-                l++;
-            }
-            
         } else if (i == c2) {
             /* Remove cluster c2 */
             continue;
@@ -77,24 +59,48 @@ dist_matrix *nj_join_nearest_clusters(const dist_matrix *dmat) {
             /* Leave other clusters unchanged */
             species_name = dmat->species_names[i];
             cluster_size = dmat->cluster_sizes[i];
-
-            uint32_t l = 0;
-
-            for (uint32_t j = 0; j < i; j++) {
-                if (j == c2) {
-                    continue;
-                }
-
-                if (j != c1) {
-                    *(dist_matrix_element(out, k, l)) = dist_matrix_distance(dmat, i, j);
-                }
-
-                l++;
-            }
         }
 
         out->species_names[k] = strdup(species_name);
         out->cluster_sizes[k] = cluster_size;
+
+        /* Compute the distances */
+        uint32_t l = 0;
+
+        for (uint32_t j = 0; j < i; j++) {
+            if (j == c2) {
+                /* Remove cluster c2 */
+                continue;
+            }
+
+            double distance;
+
+            if (i == c1) {
+                uint32_t s1 = dmat->cluster_sizes[c1];
+                uint32_t s2 = dmat->cluster_sizes[c2];
+                uint32_t sj = dmat->cluster_sizes[j];
+
+                double d1 = dist_matrix_distance(dmat, c1, j) * (s1 * sj);
+                double d2 = dist_matrix_distance(dmat, c2, j) * (s2 * sj);
+
+                distance = (d1 + d2) / ((s1 + s2) * sj);
+            } else if (j == c1) {
+                uint32_t si = dmat->cluster_sizes[i];
+                uint32_t s1 = dmat->cluster_sizes[c1];
+                uint32_t s2 = dmat->cluster_sizes[c2];
+
+                double d1 = dist_matrix_distance(dmat, i, c1) * (si * s1);
+                double d2 = dist_matrix_distance(dmat, i, c2) * (si * s2);
+
+                distance = (d1 + d2) / (si * (s1 + s2));
+            } else {
+                distance = dist_matrix_distance(dmat, i, j);
+            }
+
+            *(dist_matrix_element(out, k, l)) = distance;
+
+            l++;
+        }
 
         k++;
     }
