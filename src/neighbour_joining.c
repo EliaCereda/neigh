@@ -8,13 +8,10 @@
 dist_matrix *nj_join_nearest_clusters(const dist_matrix *dmat) {
     assert(dmat->species_count >= 2);
 
-    uint32_t c1;
-    uint32_t c2;
+    uint32_t c1 = 1;
+    uint32_t c2 = 0;
 
-    if (dmat->species_count == 2) {
-        c1 = 0;
-        c2 = 1;
-    } else {
+    if (dmat->species_count > 2) {
         double u[dmat->species_count];
 
         /* Compute the average distance of each clusters from the others */
@@ -37,6 +34,8 @@ dist_matrix *nj_join_nearest_clusters(const dist_matrix *dmat) {
                 }
             }
         }
+
+        assert(isfinite(min_distance));
     }
 
     dist_matrix *out = dist_matrix_init(dmat->species_count - 1);
