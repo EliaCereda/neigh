@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <math.h>
 #include <string.h>
+#include <stdio.h>
 
 dist_matrix *nj_join_nearest_clusters(const dist_matrix *dmat) {
     assert(dmat->species_count >= 2);
@@ -40,7 +41,10 @@ dist_matrix *nj_join_nearest_clusters(const dist_matrix *dmat) {
 
     dist_matrix *out = dist_matrix_init(dmat->species_count - 1);
 
-    // FIXME: check out NULL
+    if (out == NULL) {
+        perror("Unable to create output distance matrix");
+        return NULL;
+    }
     
     uint32_t k = 0;
 
