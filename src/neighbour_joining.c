@@ -5,8 +5,10 @@
 #include <string.h>
 #include <stdio.h>
 
-dist_matrix *nj_join_nearest_clusters(const dist_matrix *dmat, const char *new_name) {
+dist_matrix *nj_join_nearest_clusters(const dist_matrix *dmat, const char *new_name, uint32_t *_c1, uint32_t *_c2) {
     assert(dmat->species_count >= 2);
+    assert(_c1 != NULL);
+    assert(_c2 != NULL);
 
     uint32_t c1 = 1;
     uint32_t c2 = 0;
@@ -107,6 +109,9 @@ dist_matrix *nj_join_nearest_clusters(const dist_matrix *dmat, const char *new_n
 
         k++;
     }
-
+    
+    *_c1 = c1;
+    *_c2 = c2;
+    
     return out;
 }

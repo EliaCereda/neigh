@@ -33,13 +33,16 @@ int main(int argc, char *argv[]) {
             unsigned long result = snprintf(cluster_name, sizeof(cluster_name), "C_%" PRIu32, cluster_id);
             assert(result > 0 && result < sizeof(cluster_name));
             
-            dist_matrix *joined = nj_join_nearest_clusters(dmat, cluster_name);
+            uint32_t c1, c2;
+            dist_matrix *joined = nj_join_nearest_clusters(dmat, cluster_name, &c1, &c2);
 
+            printf("Joining clusters '%s' and '%s' in '%s'.\n\n", dmat->species_names[c1], dmat->species_names[c2], cluster_name);
+            
             dist_matrix_free(dmat);
             dmat = joined;
 
             dist_matrix_print(dmat);
-            printf("\n");
+            printf("\n\n");
 
             cluster_id++;
         }
