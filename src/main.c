@@ -33,12 +33,17 @@ int main(int argc, char *argv[]) {
         uint32_t cluster_id = 1;
 
         while (dmat->species_count >= 2) {
+            double u[dmat->species_count];
+            
+            /* Compute the average distance of each clusters from the others */
+            dist_matrix_compute_avg_distances(dmat, u);
+
+            uint32_t c1, c2;
+            double distance = nj_find_nearest_clusters(dmat, u, &c1, &c2);
+
             unsigned long result = snprintf(cluster_name, sizeof(cluster_name), "C_%" PRIu32, cluster_id);
             assert(result > 0 && result < sizeof(cluster_name));
             
-            uint32_t c1, c2;
-            double distance = nj_find_nearest_clusters(dmat, &c1, &c2);
-
             dist_matrix *joined = nj_join_clusters(dmat, cluster_name, c1, c2);
             
             if (joined == NULL) {
@@ -47,7 +52,7 @@ int main(int argc, char *argv[]) {
             
             printf("Joining clusters '%s' and '%s' in '%s'.\n\n", dmat->species_names[c1], dmat->species_names[c2], cluster_name);
 
-            nj_tree_add_node(dmat, tree_storage, working_nodes, cluster_name, c1, c2);
+            nj_tree_add_node(dmat, tree_storage, working_nodes, cluster_name, c1, c2, u);
 
             dist_matrix_free(dmat);
             dmat = joined;

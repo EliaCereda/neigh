@@ -5,16 +5,11 @@
 #include <string.h>
 #include <stdio.h>
 
-double nj_find_nearest_clusters(const dist_matrix *dmat, uint32_t *c1, uint32_t *c2) {
+double nj_find_nearest_clusters(const dist_matrix *dmat, const double u[], uint32_t *c1, uint32_t *c2) {
     assert(dmat->species_count >= 2);
     assert(c1 != NULL);
     assert(c2 != NULL);
-
-    double u[dmat->species_count];
-
-    /* Compute the average distance of each clusters from the others */
-    dist_matrix_compute_avg_distances(dmat, u);
-
+   
     /*
      * Find the two clusters that minimize the distance metric:
      *      min { D(c1, c2) - U(c1) - U(c2) } among all c1, c2 in dmat
@@ -128,13 +123,17 @@ btree_storage *nj_tree_init(const dist_matrix *dmat, btree_node **leafs) {
     return storage;
 }
 
-void nj_tree_add_node(const dist_matrix *dmat, btree_storage *storage, btree_node **working_nodes, const char *name, uint32_t c1, uint32_t c2) {
+void nj_tree_add_node(const dist_matrix *dmat, btree_storage *storage, btree_node **working_nodes, const char *name, uint32_t c1, uint32_t c2, const double u[]) {
     btree_node *node = btree_storage_fetch(storage);
 
     node->node_name = strdup(name);
     node->left = working_nodes[c1];
     node->right = working_nodes[c2];
-
+    
+    double distance = dist_matrix_distance(dmat, c1, c2);
+    
+    node->distance_left = (distance + u[c1] - u[c2]) / 2;
+    node->distance_right = (distance + u[c2] - u[c1]) / 2;
     working_nodes[c1] = node;
 
     for (uint32_t i = c2 + 1; i < dmat->species_count; i++) {

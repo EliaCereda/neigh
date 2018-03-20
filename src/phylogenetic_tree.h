@@ -12,6 +12,9 @@ struct btree_node {
 
     /* Left and right children */
     btree_node *left, *right;
+    
+    /* Distances to the left and right children */
+    double distance_left, distance_right;
 };
 
 typedef struct btree_storage btree_storage;

@@ -44,27 +44,26 @@ btree_node *btree_storage_fetch(btree_storage *storage) {
     return node;
 }
 
-static void _btree_print(btree_node *root, uint32_t depth) {
+static void _btree_print(btree_node *root, uint32_t depth, double distance) {
     if (root == NULL) {
         return;
     }
 
-    _btree_print(root->left, depth + 1);
+    _btree_print(root->left, depth + 1, root->distance_left);
 
     if (depth > 0) {
         for (uint32_t i = 1; i < depth; i++) {
-            printf("  |  ");
+            printf("  |        ");
         }
     
-        printf("  |--");
+        printf("  |--%.2lf-- ", distance);
     }
     
     printf("%s\n", root->node_name);
 
-    _btree_print(root->right, depth + 1);
+    _btree_print(root->right, depth + 1, root->distance_right);
 }
 
 void btree_print(btree_node *root) {
-    _btree_print(root, 0);
+    _btree_print(root, 0, 0);
 }
-
