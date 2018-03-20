@@ -121,20 +121,20 @@ btree_storage *nj_tree_init(const dist_matrix *dmat, btree_node **leafs) {
     return storage;
 }
 
-void nj_tree_add_node(const dist_matrix *dmat, btree_storage *storage, btree_node **working_nodes, const char *name, uint32_t c1, uint32_t c2, const double u[]) {
+void nj_tree_add_node(const dist_matrix *dmat, const double u[], btree_storage *storage, btree_node **partial_trees, const char *name, uint32_t c1, uint32_t c2) {
     btree_node *node = btree_storage_fetch(storage);
 
     node->node_name = strdup(name);
-    node->left = working_nodes[c1];
-    node->right = working_nodes[c2];
+    node->left = partial_trees[c1];
+    node->right = partial_trees[c2];
     
     double distance = dist_matrix_distance(dmat, c1, c2);
-    
     node->distance_left = (distance + u[c1] - u[c2]) / 2;
     node->distance_right = (distance + u[c2] - u[c1]) / 2;
-    working_nodes[c1] = node;
+
+    partial_trees[c1] = node;
 
     for (uint32_t i = c2 + 1; i < dmat->species_count; i++) {
-        working_nodes[i - 1] = working_nodes[i];
+        partial_trees[i - 1] = partial_trees[i];
     }
 }
