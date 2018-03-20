@@ -63,8 +63,8 @@ void dist_matrix_free(dist_matrix *dmat) {
 
 static uint32_t dist_matrix_get_offset(const dist_matrix *dmat, uint32_t s1, uint32_t s2) {
     assert(s1 != s2);
-    assert(s1 >= 0 && s1 < dmat->species_count);
-    assert(s2 >= 0 && s2 < dmat->species_count);
+    assert(s1 < dmat->species_count);
+    assert(s2 < dmat->species_count);
 
     if (s1 < s2) {
         return dist_matrix_get_offset(dmat, s2, s1);
