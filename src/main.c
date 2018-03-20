@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
             dist_matrix_compute_avg_distances(dmat, u);
 
             uint32_t c1, c2;
-            double distance = nj_find_nearest_clusters(dmat, u, &c1, &c2);
+            nj_find_nearest_clusters(dmat, u, &c1, &c2);
 
             unsigned long result = snprintf(cluster_name, sizeof(cluster_name), "C_%" PRIu32, cluster_id);
             assert(result > 0 && result < sizeof(cluster_name));

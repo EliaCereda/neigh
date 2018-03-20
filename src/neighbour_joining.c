@@ -5,7 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 
-double nj_find_nearest_clusters(const dist_matrix *dmat, const double u[], uint32_t *c1, uint32_t *c2) {
+void nj_find_nearest_clusters(const dist_matrix *dmat, const double u[], uint32_t *c1, uint32_t *c2) {
     assert(dmat->species_count >= 2);
     assert(c1 != NULL);
     assert(c2 != NULL);
@@ -31,8 +31,6 @@ double nj_find_nearest_clusters(const dist_matrix *dmat, const double u[], uint3
 
     /* A pair of clusters should always be found */
     assert(isfinite(min_distance));
-    
-    return min_distance;
 }
 
 dist_matrix *nj_join_clusters(const dist_matrix *dmat, const char *new_name, uint32_t c1, uint32_t c2) {
