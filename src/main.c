@@ -53,13 +53,17 @@ int main(int argc, char *argv[]) {
             dmat = joined;
 
             dist_matrix_print(dmat);
+            printf("\n");
+            
+            for (uint32_t j = 0; j < dmat->species_count; j++) {
+                btree_print(working_nodes[j]);
+                printf("\n");
+            }
+            
             printf("\n\n");
 
             cluster_id++;
         }
-
-        btree_print(working_nodes[0]);
-        printf("\n");
 
         dist_matrix_free(dmat);
         btree_storage_free(tree_storage);
