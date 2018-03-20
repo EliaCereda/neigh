@@ -82,19 +82,23 @@ double dist_matrix_distance(const dist_matrix *dmat, uint32_t s1, uint32_t s2) {
 }
 
 double dist_matrix_avg_distance_from_others(const dist_matrix *dmat, uint32_t s) {
-    assert(dmat->species_count > 2);
+    assert(dmat->species_count >= 2);
     
     double distance = 0;
     
-    for (uint32_t i = 0; i < dmat->species_count; i++) {
-        if (i == s) {
-            continue;
+    if (dmat->species_count > 2) {
+        for (uint32_t i = 0; i < dmat->species_count; i++) {
+            if (i == s) {
+                continue;
+            }
+            
+            distance += dist_matrix_distance(dmat, s, i);
         }
-        
-        distance += dist_matrix_distance(dmat, s, i);
+
+        distance /= (dmat->species_count - 2);
     }
     
-    return distance / (dmat->species_count - 2);
+    return distance;
 }
 
 void dist_matrix_compute_avg_distances(const dist_matrix *dmat, double distances[]) {

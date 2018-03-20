@@ -5,42 +5,39 @@
 #include <string.h>
 #include <stdio.h>
 
-void nj_find_nearest_clusters(const dist_matrix *dmat, uint32_t *c1, uint32_t *c2) {
+double nj_find_nearest_clusters(const dist_matrix *dmat, uint32_t *c1, uint32_t *c2) {
     assert(dmat->species_count >= 2);
     assert(c1 != NULL);
     assert(c2 != NULL);
 
-    *c1 = 1;
-    *c2 = 0;
+    double u[dmat->species_count];
 
-    if (dmat->species_count > 2) {
-        double u[dmat->species_count];
+    /* Compute the average distance of each clusters from the others */
+    dist_matrix_compute_avg_distances(dmat, u);
 
-        /* Compute the average distance of each clusters from the others */
-        dist_matrix_compute_avg_distances(dmat, u);
+    /*
+     * Find the two clusters that minimize the distance metric:
+     *      min { D(c1, c2) - U(c1) - U(c2) } among all c1, c2 in dmat
+     */
+    double min_distance = INFINITY;
 
-        /*
-         * Find the two clusters that minimize the distance metric:
-         *      min { D(c1, c2) - U(c1) - U(c2) } among all c1, c2 in dmat
-         */
-        double min_distance = INFINITY;
+    for (uint32_t i = 0; i < dmat->species_count; i++) {
+        for (uint32_t j = 0; j < i; j++) {
+            double distance = dist_matrix_distance(dmat, i, j) - u[i] - u[j];
 
-        for (uint32_t i = 0; i < dmat->species_count; i++) {
-            for (uint32_t j = 0; j < i; j++) {
-                double distance = dist_matrix_distance(dmat, i, j) - u[i] - u[j];
+            if (distance < min_distance) {
+                min_distance = distance;
 
-                if (distance < min_distance) {
-                    min_distance = distance;
-
-                    *c1 = i;
-                    *c2 = j;
-                }
+                *c1 = i;
+                *c2 = j;
             }
         }
-
-        /* A pair of clusters should always be found */
-        assert(isfinite(min_distance));
     }
+
+    /* A pair of clusters should always be found */
+    assert(isfinite(min_distance));
+    
+    return min_distance;
 }
 
 dist_matrix *nj_join_clusters(const dist_matrix *dmat, const char *new_name, uint32_t c1, uint32_t c2) {
