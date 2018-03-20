@@ -44,6 +44,22 @@ btree_node *btree_storage_fetch(btree_storage *storage) {
     return node;
 }
 
+uint32_t btree_get_height(btree_node *root) {
+    uint32_t left = 0;
+
+    if (root->left != NULL) {
+        left = btree_get_height(root->left) + 1;
+    }
+
+    uint32_t right = 0;
+
+    if (root->right != NULL) {
+        right = btree_get_height(root->right) + 1;
+    }
+
+    return (left >= right) ? left : right;
+}
+
 static void _btree_print(btree_node *root, uint32_t depth, double distance) {
     if (root == NULL) {
         return;
