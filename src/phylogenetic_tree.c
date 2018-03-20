@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 size_t btree_storage_size(uint32_t nodes_count) {
     return sizeof(btree_storage) + (nodes_count * member_size(btree_storage, nodes[0]));
@@ -60,26 +61,36 @@ uint32_t btree_get_height(btree_node *root) {
     return (left >= right) ? left : right;
 }
 
-static void _btree_print(btree_node *root, uint32_t depth, double distance) {
+static void _btree_print(btree_node *root, double distance, uint32_t depth, bool is_open[]) {
     if (root == NULL) {
         return;
     }
 
-    _btree_print(root->right, depth + 1, root->distance_right);
+    _btree_print(root->right, root->distance_right, depth + 1, is_open);
 
     if (depth > 0) {
         for (uint32_t i = 1; i < depth; i++) {
-            printf("  |        ");
+            printf("  %c        ", is_open[i] ? '|' : ' ');
         }
     
         printf("  |--%.2lf-- ", distance);
     }
 
+    is_open[depth] = !is_open[depth];
+
     printf("%s\n", root->node_name);
 
-    _btree_print(root->left, depth + 1, root->distance_left);
+    _btree_print(root->left, root->distance_left, depth + 1, is_open);
 }
 
 void btree_print(btree_node *root) {
-    _btree_print(root, 0, 0);
+    uint32_t height = btree_get_height(root);
+
+    bool is_open[height];
+
+    for (uint32_t i = 0; i < height; i++) {
+        is_open[i] = false;
+    }
+
+    _btree_print(root, 0, 0, is_open);
 }
