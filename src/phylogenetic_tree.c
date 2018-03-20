@@ -49,7 +49,7 @@ static void _btree_print(btree_node *root, uint32_t depth, double distance) {
         return;
     }
 
-    _btree_print(root->left, depth + 1, root->distance_left);
+    _btree_print(root->right, depth + 1, root->distance_right);
 
     if (depth > 0) {
         for (uint32_t i = 1; i < depth; i++) {
@@ -58,10 +58,10 @@ static void _btree_print(btree_node *root, uint32_t depth, double distance) {
     
         printf("  |--%.2lf-- ", distance);
     }
-    
+
     printf("%s\n", root->node_name);
 
-    _btree_print(root->right, depth + 1, root->distance_right);
+    _btree_print(root->left, depth + 1, root->distance_left);
 }
 
 void btree_print(btree_node *root) {
