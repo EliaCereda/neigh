@@ -37,7 +37,9 @@ int main(int argc, char *argv[]) {
             assert(result > 0 && result < sizeof(cluster_name));
             
             uint32_t c1, c2;
-            dist_matrix *joined = nj_join_nearest_clusters(dmat, cluster_name, &c1, &c2);
+            nj_find_nearest_clusters(dmat, &c1, &c2);
+
+            dist_matrix *joined = nj_join_clusters(dmat, cluster_name, c1, c2);
             
             if (joined == NULL) {
                 break;

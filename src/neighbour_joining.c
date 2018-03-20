@@ -5,13 +5,13 @@
 #include <string.h>
 #include <stdio.h>
 
-dist_matrix *nj_join_nearest_clusters(const dist_matrix *dmat, const char *new_name, uint32_t *_c1, uint32_t *_c2) {
+void nj_find_nearest_clusters(const dist_matrix *dmat, uint32_t *c1, uint32_t *c2) {
     assert(dmat->species_count >= 2);
-    assert(_c1 != NULL);
-    assert(_c2 != NULL);
+    assert(c1 != NULL);
+    assert(c2 != NULL);
 
-    uint32_t c1 = 1;
-    uint32_t c2 = 0;
+    *c1 = 1;
+    *c2 = 0;
 
     if (dmat->species_count > 2) {
         double u[dmat->species_count];
@@ -31,14 +31,20 @@ dist_matrix *nj_join_nearest_clusters(const dist_matrix *dmat, const char *new_n
 
                 if (distance < min_distance) {
                     min_distance = distance;
-                    c1 = i;
-                    c2 = j;
+
+                    *c1 = i;
+                    *c2 = j;
                 }
             }
         }
 
+        /* A pair of clusters should always be found */
         assert(isfinite(min_distance));
     }
+}
+
+dist_matrix *nj_join_clusters(const dist_matrix *dmat, const char *new_name, uint32_t c1, uint32_t c2) {
+    assert(dmat->species_count >= 2);
 
     dist_matrix *out = dist_matrix_init(dmat->species_count - 1);
 
@@ -109,10 +115,7 @@ dist_matrix *nj_join_nearest_clusters(const dist_matrix *dmat, const char *new_n
 
         k++;
     }
-    
-    *_c1 = c1;
-    *_c2 = c2;
-    
+
     return out;
 }
 
