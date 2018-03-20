@@ -12,8 +12,7 @@
 .idea/**/uiDesigner.xml
 
 # CMake
-cmake-build-debug/
-cmake-build-release/
+cmake-build-*/
 
 # macOS
 .DS_Store
