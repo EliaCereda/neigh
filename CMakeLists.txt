@@ -1,10 +1,31 @@
 cmake_minimum_required(VERSION 3.9)
+include(CMakeDependentOption)
+
 project(neigh)
 
 set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wpedantic")
 
-set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+# config.h header
+configure_file(src/config.h.in config.h @ONLY)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
-add_executable(neigh src/main.c src/dist_matrix.c src/dist_matrix.h src/io.c src/io.h src/neighbour_joining.c src/neighbour_joining.h src/phylogenetic_tree.c src/phylogenetic_tree.h src/utilities.h)
+# Source files
+set(neigh_SOURCES src/main.c src/dist_matrix.c src/dist_matrix.h src/io.c src/io.h src/neighbour_joining.c src/neighbour_joining.h src/phylogenetic_tree.c src/phylogenetic_tree.h src/utilities.h)
+set(neigh_LIBS )
+
+# Graphviz visualization
+find_library(CGRAPH_LIB cgraph)
+find_library(GVC_LIB gvc)
+
+cmake_dependent_option(HAS_GRAPHVIZ "Enable tree visualization with graphviz" ON "CGRAPH_LIB;GVC_LIB" OFF)
+
+if (HAS_GRAPHVIZ)
+    set(neigh_SOURCES ${neigh_SOURCES} src/viz.c src/viz.h)
+    set(neigh_LIBS    ${neigh_LIBS}    ${CGRAPH_LIB} ${GVC_LIB})
+endif()
+
+add_executable(neigh ${neigh_SOURCES})
+target_link_libraries(neigh ${neigh_LIBS})

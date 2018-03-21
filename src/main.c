@@ -1,5 +1,7 @@
+#include "config.h"
 #include "io.h"
 #include "neighbour_joining.h"
+#include "viz.h"
 
 #include <stdio.h>
 #include <inttypes.h>
@@ -7,10 +9,10 @@
 #include <assert.h>
 
 int main(int argc, char *argv[]) {
-    char *files[] = {
-            "examples/hello_world.in",
+    const char *files[] = {
+            //"examples/hello_world.in",
             "examples/evolution.in",
-            "examples/wiki.in"
+            //"examples/wiki.in"
     };
 
     int n = sizeof(files) / sizeof(*files);
@@ -76,8 +78,14 @@ int main(int argc, char *argv[]) {
             cluster_id++;
         }
 
-        btree_print(partial_trees[0]);
+        btree_node *phyl_tree = partial_trees[0];
+
+        btree_print(phyl_tree);
         printf("\n\n");
+
+#if HAS_GRAPHVIZ
+        viz_visualize_tree(phyl_tree, "prova.pdf", "pdf");
+#endif
 
         dist_matrix_free(dmat);
         btree_storage_free(tree_storage);
