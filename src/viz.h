@@ -12,6 +12,7 @@
 #include "phylogenetic_tree.h"
 
 void viz_visualize_tree(const btree_node *root, const char *output_file, const char *format);
+void viz_visualize_trees(btree_node **trees, uint32_t tree_count, const char *output_file, const char *format);
 
 #endif
 

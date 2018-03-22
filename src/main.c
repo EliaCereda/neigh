@@ -44,6 +44,10 @@ int main(int argc, char *argv[]) {
             btree_print_trees(partial_trees, dmat->species_count);
             printf("\n");
 
+#if HAS_GRAPHVIZ
+            viz_visualize_trees(partial_trees, dmat->species_count, "prova.part.pdf", "pdf");
+#endif
+            
             /* Compute the average distance of each clusters from the others */
             dist_matrix_compute_avg_distances(dmat, u);
 
