@@ -9,29 +9,63 @@
 
 Agnode_t *viz_process_tree(const btree_node *root, Agraph_t *graph) {
     Agnode_t *node = agnode(graph, root->node_name, true);
+    
+    /* Define the style attributes for the new generated nodes. */
+    agsafeset(node, "fontsize", "10.0", "");
+    agsafeset(node, "fontname", "Century Gothic", "");
+    agsafeset(node, "fontcolor", "grey22", "");
+    agsafeset(node, "fixedsize", "true", "");
+    agsafeset(node, "shape", "circle", "");
 
     if (root->left != NULL) {
         Agnode_t *left = viz_process_tree(root->left, graph);
 
-        agedge(graph, node, left, NULL, true);
+        Agedge_t *edge = agedge(graph, node, left, NULL, true);
+        
+        /* Convert floating point number (double) to an equivalent string. */
+        char edge_label[sizeof(root->distance_left)];
+        snprintf(edge_label, sizeof(edge_label), " %.1lf", root->distance_left);
+        
+        /* Define the style attributes for left edge lables. */
+        agsafeset(edge, "taillabel", edge_label, "");
+        agsafeset(edge, "labeldistance", "2.7", "");
+        agsafeset(edge, "labelangle", "-30", "");
+        agsafeset(edge, "fontcolor", "gray45", "");
+        agsafeset(edge, "fontsize", "10.0", "");
+        agsafeset(edge, "fontname", "Century Gothic", "");
     }
 
     if (root->right != NULL) {
         Agnode_t *right = viz_process_tree(root->right, graph);
 
-        agedge(graph, node, right, NULL, true);
+        Agedge_t *edge = agedge(graph, node, right, NULL, true);
+        
+        /* Convert floating point number (double) to an equivalent string. */
+        char edge_label[sizeof(root->distance_right)];
+        snprintf(edge_label, sizeof(edge_label), " %.1lf", root->distance_right);
+        
+        /* Define the style attributes for right edge lables. */
+        agsafeset(edge, "taillabel", edge_label, "");
+        agsafeset(edge, "labeldistance", "2.7", "");
+        agsafeset(edge, "labelangle", "30", "");
+        agsafeset(edge, "fontcolor", "gray45", "");
+        agsafeset(edge, "fontsize", "10.0", "");
+        agsafeset(edge, "fontname", "Century Gothic", "");
     }
 
     if (root->left == NULL && root->right == NULL) {
-        // Leaf nodes
-        agsafeset(node, "fontname", "Times-Bold", "");
+        /* Define the style attributes for leaf nodes. */
+        agsafeset(node, "fontname", "Century Gothic Bold", "");
+        agsafeset(node, "fontcolor", "black", "");
+        agsafeset(node, "shape", "plaintext", "");
+        agsafeset(node, "fontsize", "15.0", "");
     }
 
     return node;
 }
 
 void viz_visualize_tree(const btree_node *root, const char *output_file, const char *format) {
-    /* set up a graphviz context */
+    /* Set up a graphviz context */
     GVC_t *gvc = gvContext();
 
     /* Create a simple digraph */
@@ -57,10 +91,19 @@ void viz_visualize_tree(const btree_node *root, const char *output_file, const c
 Agnode_t *viz_process_trees(btree_node **trees, uint32_t tree_count, Agraph_t *graph) {
     Agnode_t *node = agnode(graph, "root", true);
     
+    /* Define the style attributes for internal root node. */
+    agsafeset(node, "fontsize", "11.0", "");
+    agsafeset(node, "fontname", "Century Gothic", "");
+    agsafeset(node, "shape", "diamond", "");
+    agsafeset(node, "fixedsize", "true", "");
+    agsafeset(node, "style", "rounded, filled", "");
+    agsafeset(node, "fillcolor", "ghostwhite", "");
+    
     for (uint32_t i = 0; i < tree_count; i++) {
         Agnode_t *subtree = viz_process_tree(trees[i], graph);
         Agedge_t *edge = agedge(graph, node, subtree, NULL, true);
         
+        /* Define the style attributes for edge. */
         agsafeset(edge, "style", "dotted", "");
     }
     
@@ -68,7 +111,7 @@ Agnode_t *viz_process_trees(btree_node **trees, uint32_t tree_count, Agraph_t *g
 }
 
 void viz_visualize_trees(btree_node **trees, uint32_t tree_count, const char *output_file, const char *format) {
-    /* set up a graphviz context */
+    /* Set up a graphviz context */
     GVC_t *gvc = gvContext();
     
     /* Create a simple digraph */
