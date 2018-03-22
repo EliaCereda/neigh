@@ -46,19 +46,17 @@ btree_node *btree_storage_fetch(btree_storage *storage) {
 }
 
 uint32_t btree_get_height(btree_node *root) {
-    uint32_t left = 0;
-
-    if (root->left != NULL) {
-        left = btree_get_height(root->left) + 1;
+    if (root == NULL) {
+        return 0;
     }
+    
+    uint32_t left = btree_get_height(root->left);
+    uint32_t right = btree_get_height(root->right);
 
-    uint32_t right = 0;
-
-    if (root->right != NULL) {
-        right = btree_get_height(root->right) + 1;
-    }
-
-    return (left >= right) ? left : right;
+    uint32_t height = 1;
+    height += (left >= right) ? left : right;
+    
+    return height;
 }
 
 static void btree_print_node(btree_node *root, double distance, uint32_t depth, bool *is_open) {
@@ -84,6 +82,8 @@ static void btree_print_node(btree_node *root, double distance, uint32_t depth, 
 }
 
 void btree_print_tree(btree_node *root) {
+    assert(root != NULL);
+    
     uint32_t height = btree_get_height(root);
     
     bool is_open[height];
