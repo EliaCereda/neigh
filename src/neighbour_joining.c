@@ -77,23 +77,17 @@ dist_matrix *nj_join_clusters(const dist_matrix *dmat, const char *new_name, uin
             double distance;
 
             if (i == c1) {
-                uint32_t s1 = dmat->cluster_sizes[c1];
-                uint32_t s2 = dmat->cluster_sizes[c2];
-                uint32_t sj = dmat->cluster_sizes[j];
+                double d1j = dist_matrix_distance(dmat, c1, j);
+                double d2j = dist_matrix_distance(dmat, c2, j);
+                double d12 = dist_matrix_distance(dmat, c1, c2);
 
-                double d1 = dist_matrix_distance(dmat, c1, j) * (s1 * sj);
-                double d2 = dist_matrix_distance(dmat, c2, j) * (s2 * sj);
-
-                distance = (d1 + d2) / ((s1 + s2) * sj);
+                distance = (d1j + d2j - d12) / 2;
             } else if (j == c1) {
-                uint32_t si = dmat->cluster_sizes[i];
-                uint32_t s1 = dmat->cluster_sizes[c1];
-                uint32_t s2 = dmat->cluster_sizes[c2];
+                double di1 = dist_matrix_distance(dmat, i, c1);
+                double di2 = dist_matrix_distance(dmat, i, c2);
+                double d12 = dist_matrix_distance(dmat, c1, c2);
 
-                double d1 = dist_matrix_distance(dmat, i, c1) * (si * s1);
-                double d2 = dist_matrix_distance(dmat, i, c2) * (si * s2);
-
-                distance = (d1 + d2) / (si * (s1 + s2));
+                distance = (di1 + di2 - d12) / 2;
             } else {
                 distance = dist_matrix_distance(dmat, i, j);
             }
