@@ -41,11 +41,7 @@ int main(int argc, char *argv[]) {
             dist_matrix_print(dmat);
             printf("\n");
 
-            for (uint32_t j = 0; j < dmat->species_count; j++) {
-                btree_print(partial_trees[j]);
-                printf("\n");
-            }
-
+            btree_print_trees(partial_trees, dmat->species_count);
             printf("\n");
 
             /* Compute the average distance of each clusters from the others */
@@ -81,7 +77,7 @@ int main(int argc, char *argv[]) {
 
         btree_node *phyl_tree = partial_trees[0];
 
-        btree_print(phyl_tree);
+        btree_print_tree(phyl_tree);
         printf("\n\n");
 
 #if HAS_GRAPHVIZ

@@ -39,6 +39,7 @@ btree_node *btree_storage_fetch(btree_storage *storage);
 
 uint32_t btree_get_height(btree_node *root);
 
-void btree_print(btree_node *root);
+void btree_print_tree(btree_node *root);
+void btree_print_trees(btree_node **trees, uint32_t tree_count);
 
 #endif /* NEIGH_PHYLOGENETIC_TREE_H */

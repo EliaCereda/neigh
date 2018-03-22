@@ -61,12 +61,12 @@ uint32_t btree_get_height(btree_node *root) {
     return (left >= right) ? left : right;
 }
 
-static void _btree_print(btree_node *root, double distance, uint32_t depth, bool is_open[]) {
+static void btree_print_node(btree_node *root, double distance, uint32_t depth, bool *is_open) {
     if (root == NULL) {
         return;
     }
 
-    _btree_print(root->right, root->distance_right, depth + 1, is_open);
+    btree_print_node(root->right, root->distance_right, depth + 1, is_open);
 
     if (depth > 0) {
         for (uint32_t i = 1; i < depth; i++) {
@@ -80,17 +80,25 @@ static void _btree_print(btree_node *root, double distance, uint32_t depth, bool
 
     printf("%s\n", root->node_name);
 
-    _btree_print(root->left, root->distance_left, depth + 1, is_open);
+    btree_print_node(root->left, root->distance_left, depth + 1, is_open);
 }
 
-void btree_print(btree_node *root) {
+void btree_print_tree(btree_node *root) {
     uint32_t height = btree_get_height(root);
-
+    
     bool is_open[height];
-
+    
     for (uint32_t i = 0; i < height; i++) {
         is_open[i] = false;
     }
-
-    _btree_print(root, 0, 0, is_open);
+    
+    btree_print_node(root, 0, 0, is_open);
 }
+
+void btree_print_trees(btree_node **trees, uint32_t tree_count) {
+    for (uint32_t i = 0; i < tree_count; i++) {
+        btree_print_tree(trees[i]);
+        printf("\n");
+    }
+}
+
