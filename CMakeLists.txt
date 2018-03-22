@@ -8,10 +8,6 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wpedantic")
 
-# config.h header
-configure_file(src/config.h.in config.h @ONLY)
-include_directories(${CMAKE_CURRENT_BINARY_DIR})
-
 # Source files
 set(neigh_SOURCES src/main.c src/dist_matrix.c src/dist_matrix.h src/io.c src/io.h src/neighbour_joining.c src/neighbour_joining.h src/phylogenetic_tree.c src/phylogenetic_tree.h src/utilities.h)
 set(neigh_LIBS )
@@ -26,6 +22,10 @@ if (HAS_GRAPHVIZ)
     set(neigh_SOURCES ${neigh_SOURCES} src/viz.c src/viz.h)
     set(neigh_LIBS    ${neigh_LIBS}    ${CGRAPH_LIB} ${GVC_LIB})
 endif()
+
+# config.h header
+configure_file(src/config.h.in config.h @ONLY)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(neigh ${neigh_SOURCES})
 target_link_libraries(neigh ${neigh_LIBS})
