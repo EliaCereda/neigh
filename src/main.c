@@ -11,8 +11,9 @@
 int main(int argc, char *argv[]) {
     const char *files[] = {
             //"examples/hello_world.in",
-            "examples/evolution.in",
-            //"examples/wiki.in"
+            //"examples/evolution.in",
+            //"examples/wiki.in",
+            "examples/INGI2368.in",
     };
 
     int n = sizeof(files) / sizeof(*files);
