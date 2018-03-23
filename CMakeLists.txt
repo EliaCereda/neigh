@@ -9,7 +9,7 @@ set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wpedantic")
 
 # Source files
-set(neigh_SOURCES src/main.c src/dist_matrix.c src/dist_matrix.h src/io.c src/io.h src/neighbour_joining.c src/neighbour_joining.h src/phylogenetic_tree.c src/phylogenetic_tree.h src/utilities.h)
+set(neigh_SOURCES src/main.c src/dist_matrix.c src/dist_matrix.h src/io.c src/io.h src/neighbour_joining.c src/neighbour_joining.h src/phylogenetic_tree.c src/phylogenetic_tree.h src/utilities.h src/cmdline.c src/cmdline.h)
 set(neigh_LIBS )
 
 # Graphviz visualization
