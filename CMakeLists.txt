@@ -44,13 +44,17 @@ find_library(CGRAPH_LIB cgraph)
 find_library(GVC_LIB gvc)
 find_path(GVC_INCLUDE_DIR graphviz/gvc.h)
 
-cmake_dependent_option(HAS_GRAPHVIZ "Enable tree visualization with graphviz" ON "CGRAPH_LIB;GVC_LIB" OFF)
+cmake_dependent_option(HAS_GRAPHVIZ "Enable tree visualization with Graphviz" ON "CGRAPH_LIB;GVC_LIB" OFF)
 
 if (HAS_GRAPHVIZ)
+    message(STATUS "Graphviz support enabled.")
+
     set(neigh_SOURCES ${neigh_SOURCES} src/viz.c src/viz.h)
     set(neigh_LIBS    ${neigh_LIBS}    ${CGRAPH_LIB} ${GVC_LIB})
 
     include_directories(SYSTEM ${GVC_INCLUDE_DIR})
+else()
+    message(WARNING "Compiling without Graphviz support.")
 endif()
 
 # config.h header
