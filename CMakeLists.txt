@@ -9,8 +9,35 @@ set(CMAKE_C_EXTENSIONS OFF)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wpedantic")
 
 # Source files
-set(neigh_SOURCES src/main.c src/dist_matrix.c src/dist_matrix.h src/io.c src/io.h src/neighbour_joining.c src/neighbour_joining.h src/phylogenetic_tree.c src/phylogenetic_tree.h src/utilities.h src/cmdline.c src/cmdline.h)
+set(neigh_SOURCES
+        src/main.c
+        src/dist_matrix.c src/dist_matrix.h
+        src/io.c src/io.h
+        src/neighbour_joining.c src/neighbour_joining.h
+        src/phylogenetic_tree.c src/phylogenetic_tree.h
+        src/utilities.h
+    )
+
 set(neigh_LIBS )
+
+# Gengetopt
+find_program(GENGETOPT_EXECUTABLE gengetopt)
+
+if (NOT GENGETOPT_EXECUTABLE)
+    message(FATAL_ERROR "gengetopt not found - aborting")
+endif()
+
+set(neigh_GGO src/options.ggo)
+set(neigh_CMDLINE ${CMAKE_CURRENT_BINARY_DIR}/cmdline.c ${CMAKE_CURRENT_BINARY_DIR}/cmdline.h)
+
+add_custom_command(OUTPUT ${neigh_CMDLINE}
+                   COMMAND ${GENGETOPT_EXECUTABLE}
+                   ARGS
+                        --input=${CMAKE_CURRENT_SOURCE_DIR}/${neigh_GGO}
+                   DEPENDS ${neigh_GGO}
+                  )
+
+set(neigh_SOURCES ${neigh_SOURCES} ${neigh_GGO} ${neigh_CMDLINE})
 
 # Graphviz visualization
 find_library(CGRAPH_LIB cgraph)
