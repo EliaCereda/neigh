@@ -23,7 +23,7 @@ if (HAS_GRAPHVIZ)
     set(neigh_SOURCES ${neigh_SOURCES} src/viz.c src/viz.h)
     set(neigh_LIBS    ${neigh_LIBS}    ${CGRAPH_LIB} ${GVC_LIB})
 
-    include_directories(${GVC_INCLUDE_DIR})
+    include_directories(SYSTEM ${GVC_INCLUDE_DIR})
 endif()
 
 # config.h header
