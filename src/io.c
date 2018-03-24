@@ -1,20 +1,9 @@
 #include "io.h"
+#include "utilities.h"
+
 #include <stdio.h>
 #include <memory.h>
 #include <inttypes.h>
-#include <ctype.h>
-
-static size_t trim_trailing_space(char *s) {
-    size_t length = strlen(s);
-
-    while (length > 0 && isspace(s[length - 1])) {
-        length--;
-    }
-
-    s[length] = '\0';
-
-    return length;
-}
 
 #define CHECK_SCANF_RESULT(result, value, message, file, dmat) \
     if (result != value) {                                     \

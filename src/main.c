@@ -4,6 +4,7 @@
 #include "neighbour_joining.h"
 #include "viz.h"
 #include "cmdline.h"
+#include "utilities.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -70,6 +71,10 @@ int main(int argc, char *argv[]) {
             
 #if HAS_GRAPHVIZ
             if (args_info.graphviz_tree_arg == graphviz_tree_arg_all) {
+                size_t length = filename_copy(input_file, NULL, 0);
+                char filename[length + 1];
+                filename_copy(input_file, filename, sizeof(filename));
+                
                 viz_visualize_trees(partial_trees, dmat->species_count, "prova.part.pdf", "pdf");
             }
 #endif

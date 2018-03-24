@@ -15,7 +15,7 @@ set(neigh_SOURCES
         src/io.c src/io.h
         src/neighbour_joining.c src/neighbour_joining.h
         src/phylogenetic_tree.c src/phylogenetic_tree.h
-        src/utilities.h
+        src/utilities.c src/utilities.h
     )
 
 set(neigh_LIBS )
