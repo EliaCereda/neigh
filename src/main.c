@@ -10,6 +10,7 @@
 #include <inttypes.h>
 #include <math.h>
 #include <assert.h>
+#include <stdbool.h>
 
 int main(int argc, char *argv[]) {
     struct gengetopt_args_info args_info;
@@ -30,6 +31,11 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "%s: Graphviz support not available\n", CMDLINE_PARSER_PACKAGE);
     }
 #endif
+    
+    /* The print_matrices_flag and print_trees_args imply verbose_flag. */
+    if (args_info.print_matrices_flag || args_info.print_trees_arg == print_trees_arg_all) {
+        args_info.verbose_flag = true;
+    }
     
     for (unsigned i = 0; i < args_info.inputs_num; i++) {
         const char *input_file = args_info.inputs[i];
@@ -80,7 +86,7 @@ int main(int argc, char *argv[]) {
             assert(result > 0 && result < sizeof(cluster_name));
             
             if (args_info.verbose_flag) {
-                fprintf(stderr, "Joining clusters '%s' and '%s' in '%s'.\n\n", dmat->species_names[c1], dmat->species_names[c2], cluster_name);
+                fprintf(stderr, "Joining clusters '%s' and '%s' in '%s'.\n", dmat->species_names[c1], dmat->species_names[c2], cluster_name);
             }
 
             /* Add a node for the new cluster to the array of partial trees */
