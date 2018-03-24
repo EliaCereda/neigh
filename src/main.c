@@ -40,6 +40,11 @@ int main(int argc, char *argv[]) {
     
     for (unsigned i = 0; i < args_info.inputs_num; i++) {
         const char *input_file = args_info.inputs[i];
+        
+        size_t length = filename_copy(input_file, NULL, 0);
+        char filename[length + 1];
+        filename_copy(input_file, filename, sizeof(filename));
+        
         dist_matrix *dmat = load_file(input_file);
         
         if (!dmat) {
@@ -71,11 +76,14 @@ int main(int argc, char *argv[]) {
             
 #if HAS_GRAPHVIZ
             if (args_info.graphviz_tree_arg == graphviz_tree_arg_all) {
-                size_t length = filename_copy(input_file, NULL, 0);
-                char filename[length + 1];
-                filename_copy(input_file, filename, sizeof(filename));
+                const char *extension = "pdf";
+                const char *format = "%s/%s.%d.%s";
                 
-                viz_visualize_trees(partial_trees, dmat->species_count, "prova.part.pdf", "pdf");
+                int size = snprintf(NULL, 0, format, args_info.output_dir_arg, filename, cluster_id, extension);
+                char buffer[size + 1];
+                snprintf(buffer, size + 1, format, args_info.output_dir_arg, filename, cluster_id, extension);
+
+                viz_visualize_trees(partial_trees, dmat->species_count, buffer, extension);
             }
 #endif
             
@@ -121,7 +129,14 @@ int main(int argc, char *argv[]) {
         
 #if HAS_GRAPHVIZ
          if (args_info.graphviz_tree_arg >= graphviz_tree_arg_final) {
-             viz_visualize_tree(phyl_tree, "prova.pdf", "pdf");
+             const char *extension = "pdf";
+             const char *format = "%s/%s.%s";
+             
+             int size = snprintf(NULL, 0, format, args_info.output_dir_arg, filename, extension);
+             char buffer[size + 1];
+             snprintf(buffer, size + 1, format, args_info.output_dir_arg, filename, extension);
+             
+             viz_visualize_tree(phyl_tree, buffer, extension);
          }
 #endif
         
