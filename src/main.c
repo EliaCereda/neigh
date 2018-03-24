@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
     double u[dmat->species_count];
 
     /* Ensure that cluster_name has enough space for the longest possible name */
-    char cluster_name[2 + 3 * sizeof(dmat->species_count)];
+    char cluster_name[2 + 3 * sizeof(dmat->species_count) + 1];
     uint32_t cluster_id = 1;
 
     btree_node *partial_trees[dmat->species_count];
