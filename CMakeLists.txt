@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 include(CMakeDependentOption)
+include(CheckCCompilerFlag)
 
 project(neigh)
 
@@ -36,6 +37,12 @@ add_custom_command(OUTPUT ${neigh_CMDLINE}
                         --input=${CMAKE_CURRENT_SOURCE_DIR}/${neigh_GGO}
                    DEPENDS ${neigh_GGO}
                   )
+
+check_c_compiler_flag(-Wno-unused-but-set-variable COMPILER_SUPPORTS_UNUSED_BUT_SET)
+
+if (COMPILER_SUPPORTS_UNUSED_BUT_SET)
+    set_source_files_properties(${neigh_CMDLINE} PROPERTIES COMPILE_FLAGS -Wno-unused-but-set-variable)
+endif()
 
 set(neigh_SOURCES ${neigh_SOURCES} ${neigh_GGO} ${neigh_CMDLINE})
 
