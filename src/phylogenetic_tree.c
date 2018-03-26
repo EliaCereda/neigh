@@ -45,6 +45,14 @@ btree_node *btree_storage_fetch(btree_storage *storage) {
     return node;
 }
 
+char *btree_node_set_name(btree_node *node, const char *name) {
+    free(node->node_name);
+
+    node->node_name = neigh_strdup(name);
+
+    return node->node_name;
+}
+
 uint32_t btree_get_height(btree_node *root) {
     if (root == NULL) {
         return 0;

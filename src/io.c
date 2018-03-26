@@ -47,7 +47,7 @@ dist_matrix *load_file(const char *file_name) {
 
         trim_trailing_space(species_name);
 
-        dmat->species_names[i] = strdup(species_name);
+        dist_matrix_set_species_name(dmat, i, species_name);
         dmat->cluster_sizes[i] = 1;
 
         for (uint32_t j = 0; j < i; j++) {

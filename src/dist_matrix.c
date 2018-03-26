@@ -61,6 +61,14 @@ void dist_matrix_free(dist_matrix *dmat) {
     }
 }
 
+char *dist_matrix_set_species_name(dist_matrix *dmat, uint32_t s, const char *species_name) {
+    free(dmat->species_names[s]);
+
+    dmat->species_names[s] = neigh_strdup(species_name);
+
+    return dmat->species_names[s];
+}
+
 static uint32_t dist_matrix_get_offset(const dist_matrix *dmat, uint32_t s1, uint32_t s2) {
     assert(s1 != s2);
     assert(s1 < dmat->species_count);

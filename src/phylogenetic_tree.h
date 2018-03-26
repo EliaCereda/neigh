@@ -37,6 +37,8 @@ void btree_storage_free(btree_storage *tree);
 /* Fetch the first available node */
 btree_node *btree_storage_fetch(btree_storage *storage);
 
+char *btree_node_set_name(btree_node *node, const char *name);
+
 uint32_t btree_get_height(btree_node *root);
 
 void btree_print_tree(btree_node *root);

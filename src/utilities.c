@@ -2,6 +2,23 @@
 
 #include <ctype.h>
 #include <string.h>
+#include <stdlib.h>
+
+char *neigh_strdup(const char *src) {
+    char *dst = NULL;
+
+    if (src != NULL) {
+        size_t length = strlen(src);
+
+        dst = malloc(length + 1);
+
+        if (dst != NULL) {
+            strcpy(dst, src);
+        }
+    }
+
+    return dst;
+}
 
 size_t trim_trailing_space(char *s) {
     size_t length = strlen(s);

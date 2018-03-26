@@ -62,7 +62,7 @@ dist_matrix *nj_join_clusters(const dist_matrix *dmat, const char *new_name, uin
             cluster_size = dmat->cluster_sizes[i];
         }
 
-        out->species_names[k] = strdup(species_name);
+        dist_matrix_set_species_name(out, k, species_name);
         out->cluster_sizes[k] = cluster_size;
 
         /* Compute the distances */
@@ -109,7 +109,8 @@ btree_storage *nj_tree_init(const dist_matrix *dmat, btree_node **leafs) {
     
     for (uint32_t i = 0; i < dmat->species_count; i++) {
         leafs[i] = btree_storage_fetch(storage);
-        leafs[i]->node_name = strdup(dmat->species_names[i]);
+
+        btree_node_set_name(leafs[i], dmat->species_names[i]);
     }
     
     return storage;
@@ -118,7 +119,8 @@ btree_storage *nj_tree_init(const dist_matrix *dmat, btree_node **leafs) {
 void nj_tree_add_node(const dist_matrix *dmat, const double u[], btree_storage *storage, btree_node **partial_trees, const char *name, uint32_t c1, uint32_t c2) {
     btree_node *node = btree_storage_fetch(storage);
 
-    node->node_name = strdup(name);
+    btree_node_set_name(node, name);
+
     node->left = partial_trees[c1];
     node->right = partial_trees[c2];
     

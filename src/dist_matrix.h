@@ -26,6 +26,8 @@ size_t dist_matrix_size(uint32_t species_count);
 dist_matrix *dist_matrix_init(uint32_t species_count);
 void dist_matrix_free(dist_matrix *dmat);
 
+char *dist_matrix_set_species_name(dist_matrix *dmat, uint32_t s, const char *species_name);
+
 /* Extract the distance between species s1 and s2 */
 double *dist_matrix_element(dist_matrix *dmat, uint32_t s1, uint32_t s2);
 double  dist_matrix_distance(const dist_matrix *dmat, uint32_t s1, uint32_t s2);
