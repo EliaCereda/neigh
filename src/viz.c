@@ -14,12 +14,10 @@ Agnode_t *viz_process_tree(const btree_node *root, Agraph_t *graph) {
     agsafeset(node, "fontsize", "10.0", "");
     agsafeset(node, "fontname", "Century Gothic", "");
     agsafeset(node, "fontcolor", "grey22", "");
-    agsafeset(node, "fixedsize", "true", "");
     agsafeset(node, "shape", "circle", "");
 
     if (root->left != NULL) {
         Agnode_t *left = viz_process_tree(root->left, graph);
-
         Agedge_t *edge = agedge(graph, node, left, NULL, true);
         
         /* Convert floating point number (double) to an equivalent string. */
@@ -37,7 +35,6 @@ Agnode_t *viz_process_tree(const btree_node *root, Agraph_t *graph) {
 
     if (root->right != NULL) {
         Agnode_t *right = viz_process_tree(root->right, graph);
-
         Agedge_t *edge = agedge(graph, node, right, NULL, true);
         
         /* Convert floating point number (double) to an equivalent string. */
@@ -57,10 +54,9 @@ Agnode_t *viz_process_tree(const btree_node *root, Agraph_t *graph) {
         /* Define the style attributes for leaf nodes. */
         agsafeset(node, "fontname", "Century Gothic Bold", "");
         agsafeset(node, "fontcolor", "black", "");
-        agsafeset(node, "shape", "plaintext", "");
+        agsafeset(node, "shape", "rectangle", "");
         agsafeset(node, "fontsize", "15.0", "");
     }
-
     return node;
 }
 
@@ -69,12 +65,18 @@ void viz_visualize_tree(const btree_node *root, const char *output_file, const c
     GVC_t *gvc = gvContext();
 
     /* Create a simple digraph */
-    Agraph_t *graph = agopen("g", Agstrictundirected, NULL);
+    Agraph_t *graph = agopen((char *)output_file, Agstrictundirected, NULL);
 
+    agattr(graph, AGRAPH, "overlap", "false");
+    agattr(graph, AGRAPH, "splines", "true");
+    agattr(graph, AGRAPH, "sep", "0.1");
+    
+    agattr(graph, AGEDGE, "len", "1.3");
+    
     viz_process_tree(root, graph);
 
     /* Compute a layout using layout engine from command line args */
-    gvLayout(gvc, graph, "dot");
+    gvLayout(gvc, graph, "neato");
 
     /* Write the graph according to -T and -o options */
     gvRenderFilename(gvc, graph, format, output_file);
@@ -95,8 +97,7 @@ Agnode_t *viz_process_trees(btree_node **trees, uint32_t tree_count, Agraph_t *g
     agsafeset(node, "fontsize", "11.0", "");
     agsafeset(node, "fontname", "Century Gothic", "");
     agsafeset(node, "shape", "diamond", "");
-    agsafeset(node, "fixedsize", "true", "");
-    agsafeset(node, "style", "rounded, filled", "");
+    agsafeset(node, "style", "filled", "");
     agsafeset(node, "fillcolor", "ghostwhite", "");
     
     for (uint32_t i = 0; i < tree_count; i++) {
@@ -117,10 +118,16 @@ void viz_visualize_trees(btree_node **trees, uint32_t tree_count, const char *ou
     /* Create a simple digraph */
     Agraph_t *graph = agopen((char *)output_file, Agstrictundirected, NULL);
     
+    agattr(graph, AGRAPH, "overlap", "false");
+    agattr(graph, AGRAPH, "splines", "true");
+    agattr(graph, AGRAPH, "sep", "0.1");
+    
+    agattr(graph, AGEDGE, "len", "1.3");
+    
     viz_process_trees(trees, tree_count, graph);
     
     /* Compute a layout using layout engine from command line args */
-    gvLayout(gvc, graph, "twopi");
+    gvLayout(gvc, graph, "neato");
     
     /* Write the graph according to -T and -o options */
     gvRenderFilename(gvc, graph, format, output_file);
