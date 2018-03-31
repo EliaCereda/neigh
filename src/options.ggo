@@ -10,5 +10,5 @@ section "Main Options"
 # Options
 option "print-matrices"    m "Print intermediate distance matrices"   flag off
 option "print-trees"       t "Print trees"                            enum values="none", "final", "all" default="final" optional
-option "graphviz-tree"     g "Generate Graphviz trees"                enum values="none", "final", "all" default="none"  optional
+option "graphviz-trees"    g "Generate Graphviz trees"                enum values="none", "final", "all" default="none"  optional
 option "output-dir"        o "Graphviz output directory"              string typestr="path"              default="."     optional
