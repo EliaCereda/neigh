@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
     
     /* Graphviz output requested but neigh compiled without Graphviz support. */
 #if !HAS_GRAPHVIZ
-    if (args_info.graphviz_tree_given && args_info.graphviz_tree_arg > graphviz_tree_arg_none) {
+    if (args_info.graphviz_trees_given && args_info.graphviz_trees_arg > graphviz_trees_arg_none) {
         fprintf(stderr, "%s: Graphviz support not available\n", CMDLINE_PARSER_PACKAGE);
     }
 #endif
@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
             }
             
 #if HAS_GRAPHVIZ
-            if (args_info.graphviz_tree_arg == graphviz_tree_arg_all) {
+            if (args_info.graphviz_trees_arg == graphviz_trees_arg_all) {
                 const char *extension = "pdf";
                 const char *format = "%s/%s.%d.%s";
                 
@@ -128,7 +128,7 @@ int main(int argc, char *argv[]) {
         }
         
 #if HAS_GRAPHVIZ
-         if (args_info.graphviz_tree_arg >= graphviz_tree_arg_final) {
+         if (args_info.graphviz_trees_arg >= graphviz_trees_arg_final) {
              const char *extension = "pdf";
              const char *format = "%s/%s.%s";
              
