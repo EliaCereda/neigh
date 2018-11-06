@@ -107,3 +107,7 @@ with:
 ```
 $ neigh --help
 ```
+
+## Contributors
+
+This project has been developed by Giorgia Adorni and Elia Cereda.
